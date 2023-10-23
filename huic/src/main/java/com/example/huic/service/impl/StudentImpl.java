@@ -18,6 +18,8 @@ public class StudentImpl implements StudentService {
     private StudentRepository studentRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    private StudentDto studentDto;
     @Override
     public List<StudentDto> getAllStudent() {
         List<StudentEntity> studentEntityList =(List<StudentEntity>) studentRepository.findAll();
@@ -28,4 +30,20 @@ public class StudentImpl implements StudentService {
         }
         return studentDtos;
     }
-}
+
+    @Override
+    public StudentDto saveProperty(StudentDto studentDto) {
+        Optional<StudentEntity>  optionalStudentEntity = studentRepository.findById(studentDto.getId());
+        if(optionalStudentEntity.isEmpty()){
+
+
+            StudentEntity pe = modelMapper.map(studentDto,StudentEntity.class);
+
+
+            pe = studentRepository.save(pe);
+
+            StudentDto dto= modelMapper.map(pe,StudentDto.class);
+            return studentDto;
+        }
+        return studentDto;
+    }}
